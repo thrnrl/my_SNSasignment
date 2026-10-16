@@ -1,0 +1,35 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "gcc",
+            "args": [
+                "-Wall",
+                "-Wextra",
+                "-g3",
+
+                "${workspaceFolder}/main.c",
+                "${workspaceFolder}/src/network.c",
+                "${workspaceFolder}/src/profile.c",
+                "${workspaceFolder}/src/feed.c",
+                "${workspaceFolder}/src/rank.c",
+
+                "${workspaceFolder}/utils/random.c",
+                
+                "-I${workspaceFolder}/include",
+
+                "-o",
+                "${workspaceFolder}/output/main"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        }
+    ]
+}
