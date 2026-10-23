@@ -4,9 +4,9 @@ int user(int userId){
     return userId % TABLE_SIZE;
 }
 
-void init_table(p_table *t){
+void init_table(p_table *pt){
     for(int i=0;i<TABLE_SIZE;i++){
-        t->table[i] = 0;
+        pt->table[i] = 0;
     }
 }
 

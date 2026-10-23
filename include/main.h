@@ -68,6 +68,7 @@ typedef struct Post{
 }Post;
 
 typedef struct hashtagNode{
+    char key[32];
     int postId;
     struct hashtagNode *next;
 }h_node;
@@ -75,6 +76,15 @@ typedef struct hashtagNode{
 typedef struct hashtagTable{
     h_node *table[TABLE_SIZE];
 }h_table;
+
+  // =========================== //
+ //           Ranking           //
+// =========================== //
+
+typedef struct Rank{
+    int userId;
+    int friendCount;
+}Rank;
 
 /** RANDOM.C **/
 
@@ -146,7 +156,7 @@ void free_table(p_table *pt);
  * 
  */
 
- void generate_post(Post *p, int count, int userCount);
+ void generate_post(Post *p, h_table *ht, int count, int userCount);
 
  int calculate_trendFeedScore(Post *p);
 
@@ -156,10 +166,22 @@ void free_table(p_table *pt);
 
  void init_hashtag(h_table *ht);
 
- void insert_hashtag(h_table *ht);
+ void insert_hashtag(h_table *ht, char *tag, int postId);
 
  void search_hashtag(h_table *ht, Post *p, char *hashtag);
 
  void free_hashtag(h_table *ht);
+
+
+/**
+ *      RANK.C
+ * 
+ */
+
+void DivideANDConquer(Rank *arr, Rank *temp, int left, int right);
+
+void merge(Rank *arr, Rank *temp, int left, int mid, int right);
+
+void printRank(Graph *g);
 
 #endif
