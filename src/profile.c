@@ -23,21 +23,23 @@ void insert_profile(p_table *h, Profile p){
     h->table[i] = n;
 }
 
-void generate_profile(p_table *t, Graph *g, int count){
+void generate_profile(p_table *pt, Graph *g, int count){
 
-    char *favorite[] = {"workout","running","cook","laundry","bakery"}; 
+    char *favorite[] = {"workout","running","cook","laundry","bakery","game","travel","drawing"};
+    char *nickname[] = {"철수","영희","민수","지수","현우","수지","민호","하영"}; 
     for(int i=0;i<count;i++){
         Profile p;
         p.userId = i;
-        strcpy(p.favorite, favorite[i%5]);
+        strcpy(p.nickname, nickname[RANDOM(8)]);
+        strcpy(p.favorite, favorite[RANDOM(8)]); 
         p.friendCount = friendCount(g, i);
-        insert_profile(t, p);
+        insert_profile(pt, p);
     }
 }
 
-Profile *search_profile(p_table *t, int userId){
+Profile *search_profile(p_table *pt, int userId){
     int i = user(userId);
-    p_node *p = t->table[i];
+    p_node *p = pt->table[i];
 
     while(p!=0){
         if(p->data.userId == userId){
@@ -45,28 +47,29 @@ Profile *search_profile(p_table *t, int userId){
         }
         p = p->next;
     }
-
     return 0;
 }
 
 void print_profile(Profile *p){
     if(p==0){
         printf("profile Not found\n");
+        return;
     }
+    printf(" ========= %s님의 프로필 ========= \n", p->nickname);
     printf("ID: %d\n", p->userId);
-    // printf("name: %s\n", p->nickname);
+    printf("name: %s\n", p->nickname);
     printf("favorite: %s\n", p->favorite);
     printf("friends: %d\n",p->friendCount);
 }
 
-void free_table(p_table *t){
-    for(int i=0;i<MAX_SIZE;i++){
-        p_node *n = t->table[i];
+void free_table(p_table *pt){
+    for(int i=0;i<TABLE_SIZE;i++){
+        p_node *n = pt->table[i];
         while(n!=0){
             p_node *temp = n;
             n = n->next;
             free(temp);
         }
-        t->table[i] = 0;
+        pt->table[i] = 0;
     }
 }

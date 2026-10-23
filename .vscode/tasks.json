@@ -17,6 +17,7 @@
                 "${workspaceFolder}/src/rank.c",
 
                 "${workspaceFolder}/utils/random.c",
+                "${workspaceFolder}/utils/heap.c",
                 
                 "-I${workspaceFolder}/include",
 
