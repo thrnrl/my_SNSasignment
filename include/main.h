@@ -7,12 +7,12 @@
 #include <time.h>
 #include <stdbool.h>
 
-#define MAX_SIZE 100000
+#define USERS 100000
 #define INIT 99999999
-#define TABLE_SIZE 50000
+#define BUCKET 50021 //P
 #define MIN_HEAP 1
 #define MAX_HEAP 0
-#define POST_SIZE 200000
+#define POSTS 200000
 
   // =========================== //
  //            Graph            //
@@ -24,7 +24,7 @@ typedef struct Node{
 
 typedef struct Graph{
     int n; // 정점 개수
-    Node *adj_list[MAX_SIZE]; // 인접리스트
+    Node *adj_list[USERS]; // 인접리스트
 }Graph;
 
 typedef struct Heap{
@@ -52,7 +52,9 @@ typedef struct profileNode{
 }p_node;
 
 typedef struct profileTable{
-    p_node *table[TABLE_SIZE];
+    p_node **table;
+    int tablesize;
+    int count;
 }p_table;
 
   // =========================== //
@@ -74,7 +76,9 @@ typedef struct hashtagNode{
 }h_node;
 
 typedef struct hashtagTable{
-    h_node *table[TABLE_SIZE];
+    int tablesize;
+    int count;
+    h_node **table;
 }h_table;
 
   // =========================== //
@@ -86,7 +90,11 @@ typedef struct Rank{
     int friendCount;
 }Rank;
 
-/** RANDOM.C **/
+/*      utils       */
+
+/** 
+ *      RANDOM.C 
+ */
 
 int RANDOM(int n);
 
@@ -95,13 +103,26 @@ int RANDOM(int n);
  */
 
 heap *create_heap(int size, bool isMin);
+
 void swap(heap *h, int a, int b);
+
 int MinORMax(heap *h, int i, int j);
+
 void heapify(heap *h, int i);
+
 void build_heap(heap *h);
+
 int add_heap(heap *h, int v, int p);
+
 int remove_heap(heap *h, int *v, int *priority);
+
 void free_heap(heap *h);
+
+/**
+ *      USAGE.C
+ */
+
+int Usage(int count, int tablesize);
 
 /**
  *      NETWORK.C
@@ -109,9 +130,7 @@ void free_heap(heap *h);
  */
 
 void init_graph(Graph *g);
-/**
- * 그래프 초기화
- */
+
 void add_vertex(Graph *g);
 
 void add_edge(Graph *g, int v1, int v2);
@@ -121,8 +140,6 @@ int isExist(Graph *g,int v1, int v2);
 void generate_user(Graph *g, int count);
 
 void generate_edge(Graph *g, int count);
-
-void graph_print(Graph *g);
 
 void mutual(Graph *g, int user);
 
@@ -137,7 +154,8 @@ void free_graph(Graph *g);
  *      PROFILE.C
  * 
  */
-int user(int userId);
+
+int hash(int userId, int tablesize);
 
 void init_table(p_table *t);
 
@@ -146,6 +164,8 @@ void insert_profile(p_table *h, Profile p);
 void generate_profile(p_table *pt, Graph *g, int count);
 
 Profile *search_profile(p_table *pt, int userId);
+
+int PTrehash(p_table *pt);
 
 void print_profile(Profile *p);
 
@@ -162,13 +182,15 @@ void free_table(p_table *pt);
 
  void printTrendFeed(Post *p, int count);
 
- int hashtag(char *hashtag);
+ int djb2(char *hashtag, int tablesize);
 
  void init_hashtag(h_table *ht);
 
  void insert_hashtag(h_table *ht, char *tag, int postId);
 
  void search_hashtag(h_table *ht, Post *p, char *hashtag);
+
+int HTrehash(h_table *ht);
 
  void free_hashtag(h_table *ht);
 

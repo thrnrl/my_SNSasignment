@@ -2,13 +2,13 @@
 
 void init_graph(Graph *g){
     g->n = 0;
-    for(int i=0;i<MAX_SIZE;i++){
+    for(int i=0;i<USERS;i++){
         g->adj_list[i]=0;
     }
 }
 
 void add_vertex(Graph *g){
-    if(g->n >= MAX_SIZE){
+    if(g->n >= USERS){
         printf("OVERFLOW!!!\n");
         return;
     }
@@ -76,21 +76,8 @@ void generate_edge(Graph *g, int count){
     }
 }
 
-void graph_print(Graph *g){
-    for(int i=0;i<g->n;i++){
-        printf("%d의 이웃: ", i);
-        Node *node = g->adj_list[i];
-
-        while(node!=0){
-            printf("%d ",node->vertex);
-            node = node->next;
-        }
-        printf("\n");
-    }
-}
-
 void mutual(Graph *g, int me){
-    int visited[MAX_SIZE] = {0};
+    int visited[USERS] = {0};
     Node *friend;
     Node *mutual;
 
@@ -106,7 +93,7 @@ void mutual(Graph *g, int me){
         mutual=g->adj_list[friend->vertex];
         while(mutual!=0){
             if(visited[mutual->vertex]==0){
-                printf("%d\n",mutual->vertex);
+                printf("%d, ",mutual->vertex);
                 visited[mutual->vertex] = 1;
             }
             mutual = mutual->next;
@@ -117,10 +104,10 @@ void mutual(Graph *g, int me){
 }
 
 void dijkstra(Graph *g, int s, int e){
-    int distance[MAX_SIZE];
-    int visited[MAX_SIZE];
-    int prev[MAX_SIZE];
-    int path[MAX_SIZE];
+    int *distance = (int*)malloc(sizeof(int) * g->n);
+    int *visited = (int*)malloc(sizeof(int)*g->n);
+    int *prev = (int*)malloc(sizeof(int)*g->n);
+    int *path = (int*)malloc(sizeof(int)*g->n);
     int count = 0;
     heap *h = create_heap(g->n, true);
     for(int i=0;i<g->n;i++){    
@@ -161,8 +148,7 @@ void dijkstra(Graph *g, int s, int e){
             path[count++] = current;
             current = prev[current];
         }
-        // 배열 역추적
-        for(int i=count-1;i>=0;i--){
+        for(int i=count-1;i>=0;i--){        // 배열 역추적
             printf("%d", path[i]);
             if(i!=0){
                 printf(" -> ");
@@ -171,7 +157,12 @@ void dijkstra(Graph *g, int s, int e){
         printf("\n\n");
         printf("%d ==================> %d 촌수: %d\n", s,e,distance[e]);
     }
+    free(distance);
+    free(visited);
+    free(prev);
+    free(path);
     free_heap(h);
+    
 }
 
 int friendCount(Graph *g, int userId){

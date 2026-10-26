@@ -52,8 +52,8 @@ void merge(Rank *arr, Rank *temp, int left, int mid, int right){
 void printRank(Graph *g){
     int i;
     int count = g->n;
-    Rank *arr = malloc(sizeof(Rank)*count);
-    Rank *temp = malloc(sizeof(Rank)*count);
+    Rank *arr = (Rank*)malloc(sizeof(Rank)*count);
+    Rank *temp = (Rank*)malloc(sizeof(Rank)*count);
     
     for(i=0;i<count;i++){
         arr[i].userId = i;

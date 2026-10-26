@@ -12,15 +12,15 @@ int main(){
     init_table(pt);
     generate_profile(pt, g, 100000);
 
-    Post *p = malloc(sizeof(Post)*POST_SIZE);
+    Post *p = malloc(sizeof(Post)*POSTS);
     h_table *ht = malloc(sizeof(h_table));
     init_hashtag(ht);
-    generate_post(p, ht, POST_SIZE, MAX_SIZE);
+    generate_post(p, ht, POSTS, USERS);
 
-    int myId, menu,userId;
+    int myId, menu, userId;
     char tag[32];
 
-    printf("계정을 생성합니다.\n\n사용하실 ID를 입력해주세요: ");
+    printf("계정을 생성합니다.\n\n사용하실 ID를 입력해주세요: [0~100000]");
     scanf("%d", &myId);
 
     while(1){
@@ -52,7 +52,7 @@ int main(){
             print_profile(res);
         }
         else if(menu==4){
-            printTrendFeed(p, POST_SIZE);
+            printTrendFeed(p, POSTS);
         }
         else if(menu==5){
             printf("\n검색할 해시태그 입력.\n입력 예시:[#tag0~500000]: ");
@@ -73,6 +73,8 @@ int main(){
     free(g);
     free_table(pt);
     free(pt);
+    free_hashtag(ht);
+    free(ht);
 
     return 0;
 }
