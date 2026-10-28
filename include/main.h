@@ -13,6 +13,8 @@
 #define MIN_HEAP 1
 #define MAX_HEAP 0
 #define POSTS 200000
+#define PROFILE 0
+#define HASHTAG 1
 
   // =========================== //
  //            Graph            //
@@ -51,12 +53,6 @@ typedef struct profileNode{
     struct profileNode *next;
 }p_node;
 
-typedef struct profileTable{
-    p_node **table;
-    int tablesize;
-    int count;
-}p_table;
-
   // =========================== //
  //            Post             //
 // =========================== //
@@ -75,11 +71,13 @@ typedef struct hashtagNode{
     struct hashtagNode *next;
 }h_node;
 
-typedef struct hashtagTable{
+typedef struct HashTable{
+    p_node **profile;
+    h_node **hashtag;
     int tablesize;
     int count;
-    h_node **table;
-}h_table;
+    bool isP; // PROFILE OR HASHTAG
+}Table;
 
   // =========================== //
  //           Ranking           //
@@ -125,6 +123,15 @@ void free_heap(heap *h);
 int Usage(int count, int tablesize);
 
 /**
+ *      REHASH.C
+ */
+
+ void rehash(Table *ht);
+
+
+ /*         src          */
+ 
+/**
  *      NETWORK.C
  * 
  */
@@ -157,26 +164,24 @@ void free_graph(Graph *g);
 
 int hash(int userId, int tablesize);
 
-void init_table(p_table *t);
+void init_profile(Table *t);
 
-void insert_profile(p_table *h, Profile p);
+void insert_profile(Table *h, Profile p);
 
-void generate_profile(p_table *pt, Graph *g, int count);
+void generate_profile(Table *pt, Graph *g, int count);
 
-Profile *search_profile(p_table *pt, int userId);
-
-int PTrehash(p_table *pt);
+Profile *search_profile(Table *pt, int userId);
 
 void print_profile(Profile *p);
 
-void free_table(p_table *pt);
+void free_table(Table *pt);
 
 /**
  *      FEED.C
  * 
  */
 
- void generate_post(Post *p, h_table *ht, int count, int userCount);
+ void generate_post(Post *p, Table *ht, int count, int userCount);
 
  int calculate_trendFeedScore(Post *p);
 
@@ -184,15 +189,13 @@ void free_table(p_table *pt);
 
  int djb2(char *hashtag, int tablesize);
 
- void init_hashtag(h_table *ht);
+ void init_hashtag(Table *ht);
 
- void insert_hashtag(h_table *ht, char *tag, int postId);
+ void insert_hashtag(Table *ht, char *tag, int postId);
 
- void search_hashtag(h_table *ht, Post *p, char *hashtag);
+ void search_hashtag(Table *ht, Post *p, char *hashtag);
 
-int HTrehash(h_table *ht);
-
- void free_hashtag(h_table *ht);
+ void free_hashtag(Table *ht);
 
 
 /**

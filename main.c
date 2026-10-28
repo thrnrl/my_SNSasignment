@@ -3,17 +3,16 @@
 int main(){
     srand(time(0));
 
-    Graph *g = malloc(sizeof(Graph));
+    Graph *g = (Graph*)malloc(sizeof(Graph));
     init_graph(g);
     generate_user(g, 100000);
     generate_edge(g, 500000);
-
-    p_table *pt = malloc(sizeof(p_table));
-    init_table(pt);
+    Table *pt = (Table*)malloc(sizeof(Table));
+    init_profile(pt);
     generate_profile(pt, g, 100000);
-
+    
     Post *p = malloc(sizeof(Post)*POSTS);
-    h_table *ht = malloc(sizeof(h_table));
+    Table *ht = (Table*)malloc(sizeof(Table));
     init_hashtag(ht);
     generate_post(p, ht, POSTS, USERS);
 

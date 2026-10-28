@@ -16,28 +16,25 @@ void add_vertex(Graph *g){
 }
 
 void add_edge(Graph *g, int v1, int v2){
-    Node *node;
 
     if(v1 >= g->n || v2 >= g->n){
         printf("vertex not inserting\n");
         return;
     }
 
-    node = (Node*)malloc(sizeof(*node));
+    Node *n1 = (Node*)malloc(sizeof(Node));
+    Node *n2 = (Node*)malloc(sizeof(Node));
 
-    if(node == 0){
-        printf("memory dealocation\n");
+    if(n1 == 0 || n2 == 0){
         return;
     }
-    node->vertex = v2;
-    node->next = g->adj_list[v1];
-    g->adj_list[v1]=node;
-
-    node = (Node*)malloc(sizeof(*node));
-
-    node->vertex = v1;
-    node->next = g->adj_list[v2];
-    g->adj_list[v2]=node;
+    n1->vertex = v2;
+    n1->next = g->adj_list[v1];
+    g->adj_list[v1]=n1;
+    
+    n2->vertex = v1;
+    n2->next = g->adj_list[v2];
+    g->adj_list[v2]=n2;
 }
 
 int isExist(Graph *g, int v1, int v2){
@@ -77,7 +74,13 @@ void generate_edge(Graph *g, int count){
 }
 
 void mutual(Graph *g, int me){
-    int visited[USERS] = {0};
+    int *visited = (int*)malloc(sizeof(int)*g->n);
+    if(visited==0){
+        return;
+    }
+    for(int i=0;i<g->n;i++){
+        visited[i]=0;
+    }
     Node *friend;
     Node *mutual;
 

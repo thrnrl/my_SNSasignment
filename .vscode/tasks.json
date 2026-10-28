@@ -19,6 +19,7 @@
                 "${workspaceFolder}/utils/random.c",
                 "${workspaceFolder}/utils/heap.c",
                 "${workspaceFolder}/utils/usage.c",
+                "${workspaceFolder}/utils/rehash.c",
                 
                 "-I${workspaceFolder}/include",
 

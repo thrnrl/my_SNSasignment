@@ -1,6 +1,6 @@
 #include "main.h"
 
-void generate_post(Post *p, h_table *ht, int count, int userCount){
+void generate_post(Post *p, Table *ht, int count, int userCount){
     int tagId;
     if(p==NULL){
         return;
@@ -10,7 +10,6 @@ void generate_post(Post *p, h_table *ht, int count, int userCount){
         p[i].userId = RANDOM(userCount);
         p[i].likes = RANDOM(500);
         p[i].uploadTime = RANDOM(43200); // 분 단위 경과시간
-        
         if(i<50000){
             tagId = i;
         }
@@ -27,10 +26,6 @@ int calculate_trendFeedScore(Post *p){
 }
 
 void printTrendFeed(Post *p, int count){
-
-    if (p==NULL){
-        return;
-    }
     int i, Id=0, score=0;
     heap *h = create_heap(count, MAX_HEAP);
     for(i=0;i<count;i++){
@@ -42,6 +37,9 @@ void printTrendFeed(Post *p, int count){
 
     printf(" ========= TREND FEED ========= \n");
     for(i=0;i<10&&i<count;i++){
+        if(remove_heap(h,&Id, &score)==0){
+            break;
+        }
         printf("%d | 게시물번호: %d | 좋아요 수: %d | 점수 :%d | %s\n", i+1, p[Id].postId, p[Id].likes, score ,p[Id].hashtag);
     }
     free_heap(h);
@@ -56,34 +54,38 @@ int djb2(char *tag, int tablesize){
     return hash % tablesize;
 }
 
-void init_hashtag(h_table *ht){
+void init_hashtag(Table *ht){
     ht->tablesize = BUCKET;
     ht->count=0;
-    ht->table = (h_node**)calloc(ht->tablesize,sizeof(h_node*));
-}
-
-void insert_hashtag(h_table *ht, char *tag, int postId){
-    int i = djb2(tag, ht->tablesize);
-    h_node *n = (h_node*)malloc(sizeof(h_node));
-
-    if(n == 0){
-        printf("Memory Misallcation");
+    ht->hashtag = (h_node**)malloc(sizeof(h_node*)*ht->tablesize);
+    ht->isP = false;
+    if(ht->tablesize==0){
         return;
     }
-
-    strcpy(n->key, tag);
-    n->postId = postId;
-    n->next = ht->table[i];
-    ht->table[i] = n;
-    ht->count++;
-    if(Usage(ht->count, ht->tablesize)){
-        HTrehash(ht);
+    for(int i=0;i<ht->tablesize;i++){
+        ht->hashtag[i]=0;
     }
 }
 
-void search_hashtag(h_table *ht, Post *p, char *tag){
+void insert_hashtag(Table *ht, char *tag, int postId){
     int i = djb2(tag, ht->tablesize);
-    h_node *current = ht->table[i];
+    h_node *n = (h_node*)malloc(sizeof(h_node));
+    if(n == 0){
+        return;
+    }
+    strcpy(n->key, tag);
+    n->postId = postId;
+    n->next = ht->hashtag[i];
+    ht->hashtag[i] = n;
+    ht->count++;
+    if(Usage(ht->count, ht->tablesize)){
+        rehash(ht);
+    }
+}
+
+void search_hashtag(Table *ht, Post *p, char *tag){
+    int i = djb2(tag, ht->tablesize);
+    h_node *current = ht->hashtag[i];
     int count = 0;
 
     printf(" ========= %s 게시물 목록 ========= \n", tag);
@@ -103,39 +105,17 @@ void search_hashtag(h_table *ht, Post *p, char *tag){
     }
 }
 
-int HTrehash(h_table *ht){
-    int new = ht->tablesize *2+1;
-    h_node **newTable = (h_node**)calloc(new,sizeof(h_node *));
+void free_hashtag(Table *ht){
     for(int i=0;i<ht->tablesize;i++){
-        h_node *current = ht->table[i];
-        while(current!=0){
-            h_node *next = current->next;
-            int i = djb2(current->key, new);
-            current->next = newTable[i];
-            newTable[i] = current;
-            current = next;
-        }
-    }
-    free(ht->table);
-    ht->table = newTable;
-    ht->tablesize = new;
-
-    printf("REHASH :%d\n", new);
-
-    return 1;
-}
-
-void free_hashtag(h_table *ht){
-    for(int i=0;i<BUCKET;i++){
-        h_node *current = ht->table[i];
+        h_node *current = ht->hashtag[i];
         while(current!=0){
             h_node *next = current->next;
             free(current);
             current = next;
         }
     }
-    free(ht->table);
-    ht->table=0;
+    free(ht->hashtag);
+    ht->hashtag=0;
     ht->tablesize=0;
     ht->count=0;
 }
