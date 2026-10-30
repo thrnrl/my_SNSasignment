@@ -22,7 +22,8 @@ void generate_post(Post *p, Table *ht, int count, int userCount){
 }
 
 int calculate_trendFeedScore(Post *p){
-    return p->likes / (p->uploadTime+1);
+    int score = p->likes / (p->uploadTime+1);
+    return score*500 + p->likes;
 }
 
 void printTrendFeed(Post *p, int count){

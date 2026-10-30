@@ -115,6 +115,7 @@ void dijkstra(Graph *g, int s, int e){
     int *prev = (int*)malloc(sizeof(int)*g->n);
     int *path = (int*)malloc(sizeof(int)*g->n);
     int count = 0;
+    int v, priority;
     heap *h = create_heap(g->n, true);
     for(int i=0;i<g->n;i++){    
         distance[i] = INIT;
@@ -123,8 +124,6 @@ void dijkstra(Graph *g, int s, int e){
     }
     distance[s] = 0;
     add_heap(h, s, 0);
-    int v;
-    int priority;
     while(h->size > 0){
         remove_heap(h, &v, &priority);
         if(visited[v]){
