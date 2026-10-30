@@ -57,9 +57,10 @@ int djb2(char *tag, int tablesize){
 void init_hashtag(Table *ht){
     ht->tablesize = BUCKET;
     ht->count=0;
+    ht->profile = 0;
     ht->hashtag = (h_node**)malloc(sizeof(h_node*)*ht->tablesize);
     ht->isP = false;
-    if(ht->tablesize==0){
+    if(ht->hashtag==0){
         return;
     }
     for(int i=0;i<ht->tablesize;i++){
@@ -73,7 +74,7 @@ void insert_hashtag(Table *ht, char *tag, int postId){
     if(n == 0){
         return;
     }
-    strcpy(n->key, tag);
+    n->key = tag;
     n->postId = postId;
     n->next = ht->hashtag[i];
     ht->hashtag[i] = n;

@@ -26,6 +26,8 @@ void add_edge(Graph *g, int v1, int v2){
     Node *n2 = (Node*)malloc(sizeof(Node));
 
     if(n1 == 0 || n2 == 0){
+        free(n1);
+        free(n2);
         return;
     }
     n1->vertex = v2;
@@ -104,6 +106,7 @@ void mutual(Graph *g, int me){
         friend= friend->next;
     }
     printf("\n");
+    free(visited);
 }
 
 void dijkstra(Graph *g, int s, int e){

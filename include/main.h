@@ -66,7 +66,7 @@ typedef struct Post{
 }Post;
 
 typedef struct hashtagNode{
-    char key[32];
+    char *key;
     int postId;
     struct hashtagNode *next;
 }h_node;

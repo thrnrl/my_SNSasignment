@@ -5,11 +5,14 @@ int hash(int userId, int tablesize){
 }
 
 void init_profile(Table *pt){
-    pt->profile = (p_node**)malloc(sizeof(p_node *)*pt->tablesize);
+    
     pt->tablesize = BUCKET;
     pt->count = 0;
     pt->isP = true;
-    if(pt->tablesize==0){
+    pt->hashtag = 0;
+    pt->profile = (p_node**)malloc(sizeof(p_node *)*pt->tablesize);
+
+    if(pt->profile==0){
         return;
     }
     for(int i=0;i<pt->tablesize;i++){

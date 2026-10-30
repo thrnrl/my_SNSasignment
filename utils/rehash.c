@@ -3,8 +3,8 @@
 void rehash(Table *ht){
     int n = ht->tablesize*2;
     if(ht->isP){
-        p_node **new = (p_node**)malloc(sizeof(p_node)*n);
-        if(n==0){
+        p_node **new = (p_node**)malloc(sizeof(p_node*)*n);
+        if(new==0){
             return;
         }
         for(int i=0;i<n;i++){
@@ -24,8 +24,8 @@ void rehash(Table *ht){
         ht->profile = new;
     }
     else{
-        h_node **new = (h_node**)malloc(sizeof(h_node)*n);
-        if(n==0){
+        h_node **new = (h_node**)malloc(sizeof(h_node*)*n);
+        if(new==0){
             return;
         }
         for(int i=0;i<n;i++){

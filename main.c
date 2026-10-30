@@ -1,5 +1,11 @@
 #include "include/main.h"
 
+void clear(){
+    while((getchar())!='\n');
+}
+
+
+
 int main(){
     srand(time(0));
 
@@ -18,9 +24,14 @@ int main(){
 
     int myId, menu, userId;
     char tag[32];
-
-    printf("계정을 생성합니다.\n\n사용하실 ID를 입력해주세요: [0~100000]");
-    scanf("%d", &myId);
+    
+    while(1){
+        printf("계정을 생성합니다.\n사용하실 ID를 입력해주세요[범위: 0~99999]:");
+        if(scanf("%d", &myId)!=1 || myId < 0 || myId>=USERS){
+            printf("Access Dinied!\n");
+            continue;
+        }
+    }
 
     while(1){
         printf("\n ========= MENU ========= \n\n");
@@ -32,11 +43,20 @@ int main(){
         printf("6. 유저 간 랭킹\n");
         printf("0. 종료\n");
         printf(":: ");
-        scanf("%d", &menu);
-
+        if(scanf("%d", &menu)==EOF){
+            break;
+        }
+        else if(menu!=1){
+            printf("access Denied, plz check your num.\n");
+            clear();
+            continue;
+        }
         if(menu==1){
             printf("\n친구 ID 입력: ");
-            scanf("%d", &userId);
+            if(scanf("%d", &userId)!=1 || userId<0 || userId >= USERS){
+                printf("존재하지 않는 ID");
+                break;
+            }
             printf("\n");
             dijkstra(g, myId, userId);
         }
@@ -54,8 +74,11 @@ int main(){
             printTrendFeed(p, POSTS);
         }
         else if(menu==5){
-            printf("\n검색할 해시태그 입력.\n입력 예시:[#tag0~500000]: ");
-            scanf("%31s", tag);
+            printf("\n검색할 해시태그 입력.\n[#tag0~49999]: ");
+            if(scanf("%31s", tag)!=1){
+                printf("access dinied, check md.");
+                break;
+            }
             search_hashtag(ht, p, tag);
         }
         else if(menu==6){
@@ -64,9 +87,10 @@ int main(){
         else if(menu==0){
             break;
         }
+        else{
+            printf("your input is not exist. follow to borad number!");
+        }
     }
-
-    
     free(p);
     free_graph(g);
     free(g);
