@@ -62,7 +62,7 @@ int add_heap(heap *h, int v, int p){
     h->Id[i] = v;
     h->priority[i] = p;
     while(i>1){
-        if(h->priority[parent] <= h->priority[i]){
+        if(MinORMax(h, i, parent)==0){
             break;
         }
         swap(h, i, parent);
