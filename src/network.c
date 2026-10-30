@@ -16,9 +16,9 @@ void add_vertex(Graph *g){
 }
 
 void add_edge(Graph *g, int v1, int v2){
-
-    if(v1 >= g->n || v2 >= g->n){
-        printf("vertex not inserting\n");
+    if(v1<0 || v2<0){
+        return;
+    }else if(v1 >= g->n || v2 >= g->n){
         return;
     }
 

@@ -164,9 +164,9 @@ void free_graph(Graph *g);
 
 int hash(int userId, int tablesize);
 
-void init_profile(Table *t);
+void init_profile(Table *pt);
 
-void insert_profile(Table *h, Profile p);
+void insert_profile(Table *pt, Profile p);
 
 void generate_profile(Table *pt, Graph *g, int count);
 

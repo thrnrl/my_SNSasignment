@@ -50,6 +50,10 @@ void generate_profile(Table *pt, Graph *g, int count){
 }
 
 Profile *search_profile(Table *pt, int userId){
+
+    if(userId>=USERS){
+        return 0;
+    }
     int i = hash(userId, pt->tablesize);
     p_node *p = pt->profile[i];
     

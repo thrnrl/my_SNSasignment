@@ -53,6 +53,9 @@ void build_heap(heap *h){
 }
 
 int add_heap(heap *h, int v, int p){
+    if(h->size >= h->capacity){
+        return 0;
+    }
     h->size++;
     int i = h->size;
     int parent = i/2;

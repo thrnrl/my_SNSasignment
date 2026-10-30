@@ -1,12 +1,39 @@
 #include "include/main.h"
 
+
+
 void clear(){
     while((getchar())!='\n');
 }
 
-
+int try(int *n){
+    int i;
+    while(1){
+        i = scanf("%d", n);
+        if(i==EOF){
+            return EOF;
+        }else if(i==0){
+            clear();
+            printf("[access denied]:: not exist num ..\n");
+        }else if(*n<0){
+            printf("[your input < 0]\n");
+        }else if(*n>=USERS){
+            printf("[over 0-99999 range]\n");
+        }else{
+            return 1;
+        }
+        printf("try again:: ");
+    }
+}
 
 int main(){
+    int myId, menu, userId;
+    char tag[32];
+
+    printf("0 -- 99999\n기준 번호 입력: ");
+    if(try(&myId)==EOF){
+        return 0;
+    }
     srand(time(0));
 
     Graph *g = (Graph*)malloc(sizeof(Graph));
@@ -22,17 +49,6 @@ int main(){
     init_hashtag(ht);
     generate_post(p, ht, POSTS, USERS);
 
-    int myId, menu, userId;
-    char tag[32];
-    
-    while(1){
-        printf("계정을 생성합니다.\n사용하실 ID를 입력해주세요[범위: 0~99999]:");
-        if(scanf("%d", &myId)!=1 || myId < 0 || myId>=USERS){
-            printf("Access Dinied!\n");
-            continue;
-        }
-    }
-
     while(1){
         printf("\n ========= MENU ========= \n\n");
         printf("1. 사용자와의 거리 재기\n");
@@ -43,18 +59,12 @@ int main(){
         printf("6. 유저 간 랭킹\n");
         printf("0. 종료\n");
         printf(":: ");
-        if(scanf("%d", &menu)==EOF){
+        if(try(&menu)==EOF){
             break;
-        }
-        else if(menu!=1){
-            printf("access Denied, plz check your num.\n");
-            clear();
-            continue;
         }
         if(menu==1){
             printf("\n친구 ID 입력: ");
-            if(scanf("%d", &userId)!=1 || userId<0 || userId >= USERS){
-                printf("존재하지 않는 ID");
+            if(try(&userId)==EOF){
                 break;
             }
             printf("\n");
@@ -65,7 +75,9 @@ int main(){
         }
         else if(menu==3){
             printf("\n상대방 ID 입력: ");
-            scanf("%d", &userId);
+            if(try(&userId)==EOF){
+                break;
+            }
             printf("\n");
             Profile *res = search_profile(pt, userId);
             print_profile(res);
@@ -74,7 +86,7 @@ int main(){
             printTrendFeed(p, POSTS);
         }
         else if(menu==5){
-            printf("\n검색할 해시태그 입력.\n[#tag0~49999]: ");
+            printf("\n[#tag0~49999]\n해시태그 양식에 맞춰서 입력: ");
             if(scanf("%31s", tag)!=1){
                 printf("access dinied, check md.");
                 break;
@@ -88,7 +100,7 @@ int main(){
             break;
         }
         else{
-            printf("your input is not exist. follow to borad number!");
+            printf("your input not exist. follow menu num.");
         }
     }
     free(p);
