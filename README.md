@@ -15,3 +15,11 @@
 선빌드 후 실행:
 1. cmd + shift + B
 2. ./output/main
+
+Windows::::::::::::::::::
+
+gcc -std=c17 -Wall -Wextra -Iinclude main.c src/*.c utils/*.c -o main.exe
+chcp 65001
+[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
+[Console]::InputEncoding = [System.Text.UTF8Encoding]::new()
+.\main.exe
