@@ -1,0 +1,33 @@
+name: test
+
+on:
+  push:
+    branches:[final]
+  workflow_dispatch:
+
+jobs:
+  build:
+      strategy:
+        matrix:
+          os: [ubuntu-latest, macos-latest, windows-latest]
+        runs-on:${{matrix.os}}
+
+        steps:
+          - uses: actions/checkout@v4
+          - name: Setup GCC on Windows
+            if: runner.os == 'Windows'
+            uses: msys2/setup-msys2@v2
+            with:
+              msystem: UCRT64
+              install: mingw-w64-ucrt-x86_64-gcc
+
+          - name: Build on Linux / macos
+            if: runner.os != 'Windows'
+            run: |
+              cc -Wall -Wextra main.c src/*.c -Iinclude -o sns
+
+          - name: Build on windows
+            if: runner.os == 'Windows'
+            shell: msys2 {0}
+            run: |
+              gcc -Wall -Wextra main.c src/*.c -Iinclude -o sns.exe
